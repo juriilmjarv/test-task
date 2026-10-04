@@ -181,7 +181,11 @@ export default function App() {
       {tab === 'exchange' && (
         <div>
           <div>
-            <select data-testid="from-currency" value={from} onChange={(e) => setFrom(e.target.value)}>
+            <select
+              data-testid="from-currency"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+            >
               {currencies.map((c) => (
                 <option key={c} value={c}>
                   {c}

@@ -1,0 +1,15 @@
+{
+  "printWidth": 100,
+  "quoteProps": "consistent",
+  "singleQuote": true,
+  "semi": false,
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": ["*.md"],
+      "options": {
+        "proseWrap": "always"
+      }
+    }
+  ]
+}

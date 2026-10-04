@@ -42,6 +42,8 @@ The app has two tabs: **Exchange Rate** and **History**. All input comes from th
 
 ## 👩‍💻 Development
 
+- Recommended Node.js version: 22.23.2 (`.nvmrc`). Run `nvm use` if you use nvm. The minimum runtime requirement is Node.js 20.19+ on the Node 20 line, Node.js 22.13+ on the Node 22 line, or Node.js 24+.
+
 - Using AI tools is allowed.
 - Use React. All other libs are up to you.
 - If any aspect of the desired UI behaviour is ambiguous, please use your expertise and implement the best UX. Feel free to add any third-party libraries you find useful.
@@ -82,3 +84,19 @@ Please don't spend more than 8 hours. We are interested in how you prioritise, n
 npm install
 npm run dev
 ```
+
+## Tooling
+
+| Command | Purpose |
+| --- | --- |
+| `npm start` / `npm run dev` | Start the development server |
+| `npm run build` | Type-check both TypeScript projects and build the app |
+| `npm run preview` | Serve the production build |
+| `npm test` | Run Vitest in watch mode during development |
+| `npm run test:ci` | Run the complete test suite once and exit |
+| `npm run typecheck` | Check app, existing tests, and Vite configuration |
+| `npm run lint` | Check TypeScript and React hooks with ESLint |
+| `npm run format` | Format source and tooling configuration with Prettier |
+
+The existing unit tests run in Vitest’s default Node environment. Browser and API
+test tooling will be selected when the application tests are implemented.
