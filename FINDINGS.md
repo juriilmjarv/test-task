@@ -58,13 +58,18 @@ rows also support direct selection and standard listbox keyboard navigation.
 **Symptom:** The old suite passed while replacing the conversion implementation
 with a mock; formatting `250 × 1.0843` could produce `271.07`.
 
-**Cause:** A mocked conversion bypassed the actual calculation, and `toFixed(2)`
-exposed the binary floating-point representation at this rounding boundary.
+**Cause:** A mocked conversion bypassed the actual calculation. Binary
+floating-point multiplication can place a decimal tie below the rounding boundary
+(`0.18 × 1.25` becomes `0.22499999999999998`). Formatting alone cannot repair it.
 
-**Fix:** Test the real functions and use `Intl.NumberFormat` for display rounding
-(`271.08`), grouping, and omission of unnecessary trailing zeroes. Numeric
-calculations remain JavaScript numbers, appropriate for this quote calculator;
-it is not an accounting ledger. Keypad input is capped at 15 digits.
+**Fix:** Multiply with `decimal.js` at 40 significant digits, then round half-up
+to two decimal places before returning the numeric result for display and history.
+`Intl.NumberFormat` handles grouping and omission of unnecessary trailing zeroes.
+Regression tests cover ties (`0.18 × 1.25 → 0.23`, `0.7 × 0.95 → 0.67`), values
+just below a tie, and the original `271.08` case; an app test verifies that display
+and saved history agree. Input is capped at 15 digits. API amounts and stored
+results remain JavaScript numbers; amounts at extreme magnitudes retain the
+precision limits of that representation.
 
 ## Failed requests left loading or stale content
 
@@ -119,7 +124,18 @@ responsive width changes, and scrolling.
   from HTTP 429/500 and network failures, blocked saving while a new amount is
   pending, and returning to a previously quoted amount. In a temporary copy,
   removing response guards, request-key matching, or refresh revisions made the
-  corresponding tests fail. Expiry timing remains outside automated coverage.
+  corresponding tests fail. Fake-clock tests now cover expiry, blocked saving at
+  the exact expiration boundary before the next UI tick, and refresh recovery.
+  Currency-catalog failure and retry are covered without a live service.
 - History stays in memory as required. Amount changes, currency changes, and
   explicit refresh request quotes immediately, without debounce or an automatic
   retry loop. Pending requests cannot display or save a previous quote.
+
+## Type safety and status readability
+
+**Symptom:** Array indexing was accepted as always present under the default strict
+configuration, and nested status-message conditionals were difficult to follow.
+
+**Fix:** Enable `noUncheckedIndexedAccess`, guard missing currency/history entries,
+and use checked indexing in test fixtures. Status messages now use early returns;
+existing app tests cover loading, error, ready, and expired states.

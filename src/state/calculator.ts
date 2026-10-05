@@ -56,18 +56,25 @@ export function calculatorReducer(state: CalculatorState, action: Action): Calcu
       return state.currencies.includes(action.currency) && state[action.side] !== action.currency
         ? { ...state, [action.side]: action.currency, revision: state.revision + 1 }
         : state
-    case 'currenciesLoaded':
+
+    case 'currenciesLoaded': {
+      const firstCurrency = action.currencies[0]
+
+      if (!firstCurrency) return state
+
       return {
         ...state,
         currencies: action.currencies,
         catalogStatus: 'ready',
         catalogError: null,
-        from: action.currencies.includes(state.from) ? state.from : action.currencies[0],
+        from: action.currencies.includes(state.from) ? state.from : firstCurrency,
         to: action.currencies.includes(state.to)
           ? state.to
-          : (action.currencies[1] ?? action.currencies[0]),
+          : (action.currencies[1] ?? firstCurrency),
         revision: state.revision + 1,
       }
+    }
+
     case 'currenciesFailed':
       return { ...state, catalogStatus: 'error', catalogError: action.message }
     case 'reloadCurrencies':
@@ -96,10 +103,11 @@ export function calculatorReducer(state: CalculatorState, action: Action): Calcu
       }
 
       const index = state.history.findIndex((record) => record.id === state.selectedId)
+      const selectedRecord = state.history[index]
 
       if (action.key === 'clear') return { ...state, history: [], selectedId: null }
 
-      if (index < 0) return state
+      if (!selectedRecord) return state
 
       if (action.key === 'backspace') {
         const history = state.history.filter((record) => record.id !== state.selectedId)
@@ -117,18 +125,18 @@ export function calculatorReducer(state: CalculatorState, action: Action): Calcu
           Math.min(state.history.length - 1, index + (action.key === 'up' ? -1 : 1)),
         )
 
-        return { ...state, selectedId: state.history[next].id }
+        const nextRecord = state.history[next]
+
+        return nextRecord ? { ...state, selectedId: nextRecord.id } : state
       }
 
       if (action.key === 'load') {
-        const record = state.history[index]
-
         return {
           ...state,
           tab: 'exchange',
-          from: record.from,
-          to: record.to,
-          amount: record.amount,
+          from: selectedRecord.from,
+          to: selectedRecord.to,
+          amount: selectedRecord.amount,
           revision: state.revision + 1,
         }
       }

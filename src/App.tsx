@@ -46,18 +46,19 @@ export default function App() {
   const canSave = quote.status === 'ready' && !expired
   const status = state.catalogStatus === 'ready' ? quote.status : state.catalogStatus
 
-  const message =
-    state.catalogStatus === 'error'
-      ? (state.catalogError ?? 'Unable to load currencies.')
-      : state.catalogStatus === 'loading'
-        ? 'Loading currencies…'
-        : quote.status === 'error'
-          ? quote.error
-          : quote.status === 'ready'
-            ? expired
-              ? `Last updated ${formatElapsed(Date.parse(quote.quote.createdAt), now)} · Expired. Refresh to save.`
-              : `Last updated ${formatElapsed(Date.parse(quote.quote.createdAt), now)}`
-            : 'Updating exchange rate…'
+  function getStatusMessage(): string {
+    if (state.catalogStatus === 'error') return state.catalogError ?? 'Unable to load currencies.'
+
+    if (state.catalogStatus === 'loading') return 'Loading currencies…'
+
+    if (quote.status === 'error') return quote.error
+
+    if (quote.status !== 'ready') return 'Updating exchange rate…'
+
+    const updated = `Last updated ${formatElapsed(Date.parse(quote.quote.createdAt), now)}`
+
+    return expired ? `${updated} · Expired. Refresh to save.` : updated
+  }
 
   function handleKey(key: KeypadAction) {
     if (key === 'save') {
@@ -94,7 +95,7 @@ export default function App() {
             result={result}
             currencies={state.currencies}
             status={status}
-            message={message}
+            message={getStatusMessage()}
             onCurrencyChange={(side, currency) => dispatch({ type: 'currency', side, currency })}
             onRefresh={() =>
               dispatch({ type: state.catalogStatus === 'error' ? 'reloadCurrencies' : 'refresh' })

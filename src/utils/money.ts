@@ -1,3 +1,6 @@
+import Decimal from 'decimal.js'
+
+const MoneyDecimal = Decimal.clone({ precision: 40 })
 const formatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 })
 
 export function parseAmount(value: string): number {
@@ -13,7 +16,10 @@ export function parseAmount(value: string): number {
 }
 
 export function convert(amount: number, rate: string): number {
-  const result = amount * Number(rate)
+  const result = new MoneyDecimal(amount)
+    .times(rate.trim())
+    .toDecimalPlaces(2, Decimal.ROUND_HALF_UP)
+    .toNumber()
 
   if (!Number.isFinite(result)) throw new Error('Invalid conversion')
 

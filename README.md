@@ -109,8 +109,9 @@ Pure utility, reducer, and API response-validation tests run in Vitest’s defau
 Node environment. React component and app integration tests use Testing Library
 and opt into jsdom per file. The app integration tests control fetch responses
 to verify out-of-order completion, HTTP/network failures, refresh recovery, and
-saving only a current quote. Components, hooks, and API validation run unchanged;
-no mocking library or live service is required for CI. The live endpoint is used
+saving only a current quote, expiry boundaries, and currency-catalog retry.
+Components, hooks, and API validation run unchanged; no mocking library or live
+service is required for CI. The live endpoint is used
 for manual integration checks.
 
 ## Application structure
@@ -125,7 +126,9 @@ The screenshot represents two views of one calculator. The layout fits a phone
 viewport and stays centered at a maximum width of 454px on larger screens.
 History is deliberately in memory and resets when the page reloads. Each amount
 or currency change requests a fresh quote immediately. Saving is disabled until
-the current input has a matching quote.
+the current input has a matching quote. Conversions use decimal multiplication
+and half-up rounding to two decimal places before display and storage. TypeScript
+checks array accesses with `noUncheckedIndexedAccess` enabled.
 
 ### Manual integration check
 

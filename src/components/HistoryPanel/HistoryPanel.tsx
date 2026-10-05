@@ -47,7 +47,11 @@ export function HistoryPanel({ records, selectedId, onSelect }: Props) {
                             ),
                           )
 
-                  onSelect(records[next].id)
+                  const nextRecord = records[next]
+
+                  if (!nextRecord) return
+
+                  onSelect(nextRecord.id)
                   const option = event.currentTarget.parentElement?.children[next]
 
                   if (option instanceof HTMLElement) option.focus()

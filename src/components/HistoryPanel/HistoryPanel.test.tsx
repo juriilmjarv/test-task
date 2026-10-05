@@ -4,8 +4,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, it } from 'vitest'
 import { HistoryPanel } from './HistoryPanel'
+import type { HistoryRecord } from '../../types/exchange'
+import { getItem } from '../../test/getItem'
 
-const records = [
+const records: [HistoryRecord, HistoryRecord] = [
   { id: 'a', from: 'USD', to: 'EUR', amount: '1000', result: 1186.5 },
   { id: 'b', from: 'EUR', to: 'GBP', amount: '50', result: 40 },
 ]
@@ -32,7 +34,7 @@ it('supports direct selection and an empty state', async () => {
     />,
   )
 
-  await userEvent.click(screen.getAllByRole('option')[1])
+  await userEvent.click(getItem(screen.getAllByRole('option'), 1))
   expect(selected).toBe('b')
   rerender(<HistoryPanel records={[]} selectedId={null} onSelect={() => {}} />)
   expect(screen.getByText('No saved conversions')).toBeInTheDocument()
@@ -54,10 +56,10 @@ it('supports keyboard selection with a single tab stop', async () => {
 
   const options = screen.getAllByRole('option')
 
-  expect(options[0]).toHaveAttribute('tabindex', '0')
-  expect(options[1]).toHaveAttribute('tabindex', '-1')
-  options[0].focus()
+  expect(getItem(options, 0)).toHaveAttribute('tabindex', '0')
+  expect(getItem(options, 1)).toHaveAttribute('tabindex', '-1')
+  getItem(options, 0).focus()
   await userEvent.keyboard('{ArrowDown}')
   expect(selected).toBe('b')
-  expect(options[1]).toHaveFocus()
+  expect(getItem(options, 1)).toHaveFocus()
 })

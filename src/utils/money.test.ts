@@ -23,6 +23,17 @@ describe('money', () => {
     expect(formatMoney(convert(0.1, '3'))).toBe('0.3')
   })
 
+  it.each([
+    [0.18, '1.250000', 0.23],
+    [0.7, '0.950000', 0.67],
+    [1, '1.004999', 1],
+    [1, '1.005000', 1.01],
+    [1, ' 1.005000 ', 1.01],
+    [250, '1.084300', 271.08],
+  ])('rounds %s × %s half-up to %s before saving or displaying', (amount, rate, expected) => {
+    expect(convert(amount, rate)).toBe(expected)
+  })
+
   it('groups result digits and omits unnecessary decimal zeroes', () => {
     expect(formatMoney(1186.5)).toBe('1,186.5')
     expect(formatMoney(1000)).toBe('1,000')
