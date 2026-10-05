@@ -13,6 +13,7 @@ interface Props {
   onCurrencyChange: (side: 'from' | 'to', currency: string) => void
   onRefresh: () => void
 }
+
 export function ExchangePanel({
   from,
   to,

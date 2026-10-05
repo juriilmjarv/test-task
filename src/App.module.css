@@ -4,6 +4,7 @@
   place-items: center;
   padding: var(--space-8);
 }
+
 .calculator {
   width: min(100%, 454px);
   height: min(980px, calc(100svh - 4rem));
@@ -15,10 +16,12 @@
   grid-template-rows: 80px minmax(0, 1fr) 60.6%;
   overflow: hidden;
 }
+
 @media (max-width: 520px) {
   .page {
     padding: var(--space-3);
   }
+
   .calculator {
     height: calc(100svh - 1.5rem);
     border-radius: 2.5rem;

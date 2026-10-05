@@ -7,6 +7,7 @@ interface Props {
   canSave: boolean
   hasSelection: boolean
 }
+
 const keys = [
   ['clear', 'C', 'Clear'],
   ['backspace', '⌫', 'Backspace'],
@@ -27,6 +28,7 @@ const keys = [
 
 export function Keypad({ tab, onAction, canSave, hasSelection }: Props) {
   const history = tab === 'history'
+
   return (
     <section className={styles.keypad} aria-label={history ? 'History controls' : 'Amount keypad'}>
       <div className={styles.grid}>

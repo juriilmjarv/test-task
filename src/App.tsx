@@ -15,6 +15,7 @@ import styles from './App.module.css'
 
 export default function App() {
   const [state, dispatch] = useReducer(calculatorReducer, initialHistory, createCalculatorState)
+
   const quote = useQuote(
     state.from,
     state.to,
@@ -22,10 +23,12 @@ export default function App() {
     state.revision,
     state.catalogStatus === 'ready',
   )
+
   const now = useNow()
 
   useEffect(() => {
     const controller = new AbortController()
+
     fetchCurrencies(controller.signal)
       .then((currencies) => {
         if (!controller.signal.aborted) dispatch({ type: 'currenciesLoaded', currencies })
@@ -34,6 +37,7 @@ export default function App() {
         if (!controller.signal.aborted)
           dispatch({ type: 'currenciesFailed', message: errorMessage(error) })
       })
+
     return () => controller.abort()
   }, [state.catalogVersion])
 
@@ -41,6 +45,7 @@ export default function App() {
   const expired = quote.status === 'ready' && now >= Date.parse(quote.quote.expiresAt)
   const canSave = quote.status === 'ready' && !expired
   const status = state.catalogStatus === 'ready' ? quote.status : state.catalogStatus
+
   const message =
     state.catalogStatus === 'error'
       ? (state.catalogError ?? 'Unable to load currencies.')
@@ -63,6 +68,7 @@ export default function App() {
         Date.now() >= Date.parse(quote.quote.expiresAt)
       )
         return
+
       dispatch({
         type: 'save',
         record: {

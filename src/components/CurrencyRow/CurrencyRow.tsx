@@ -8,6 +8,7 @@ interface Props {
   value: string
   onChange: (currency: string) => void
 }
+
 export function CurrencyRow({ side, currency, currencies, value, onChange }: Props) {
   return (
     <div className={styles.row}>

@@ -7,6 +7,7 @@ import { ExchangePanel } from './ExchangePanel'
 
 it('shows an actionable error and lets the user retry', async () => {
   let retries = 0
+
   render(
     <ExchangePanel
       from="USD"
@@ -22,6 +23,7 @@ it('shows an actionable error and lets the user retry', async () => {
       }}
     />,
   )
+
   expect(screen.getByRole('alert')).toHaveTextContent('Too many requests')
   expect(screen.getByTestId('result')).toHaveTextContent('—')
   await userEvent.click(screen.getByTestId('refresh'))

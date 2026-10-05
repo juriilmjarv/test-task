@@ -7,6 +7,7 @@ import { Tabs } from './Tabs'
 
 it('announces the active view and requests a tab change', async () => {
   let selected = ''
+
   render(
     <Tabs
       active="exchange"
@@ -15,6 +16,7 @@ it('announces the active view and requests a tab change', async () => {
       }}
     />,
   )
+
   expect(screen.getByTestId('tab-exchange')).toHaveAttribute('aria-pressed', 'true')
   await userEvent.click(screen.getByTestId('tab-history'))
   expect(selected).toBe('history')

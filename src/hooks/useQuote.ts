@@ -19,7 +19,9 @@ export function useQuote(
 
   useEffect(() => {
     if (!enabled) return
+
     const controller = new AbortController()
+
     fetchQuote({ from, to, amount: parseAmount(amount) }, controller.signal)
       .then((quote) => {
         if (!controller.signal.aborted) setSettled({ key, status: 'ready', quote })
@@ -28,11 +30,14 @@ export function useQuote(
         if (!controller.signal.aborted)
           setSettled({ key, status: 'error', error: errorMessage(error) })
       })
+
     return () => controller.abort()
   }, [from, to, amount, key, enabled])
 
   if (!enabled) return { status: 'idle' } as const
+
   // Never display or save a settled quote belonging to an earlier input or refresh.
   if (!settled || settled.key !== key) return { status: 'loading' } as const
+
   return settled
 }

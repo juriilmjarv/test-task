@@ -7,6 +7,7 @@ import { CurrencyRow } from './CurrencyRow'
 
 it('uses a labelled native select and displays the amount as read-only text', async () => {
   let currency = ''
+
   render(
     <CurrencyRow
       side="from"
@@ -18,6 +19,7 @@ it('uses a labelled native select and displays the amount as read-only text', as
       }}
     />,
   )
+
   await userEvent.selectOptions(screen.getByLabelText('From currency'), 'EUR')
   expect(currency).toBe('EUR')
   expect(screen.getByTestId('amount')).toHaveTextContent('1000')

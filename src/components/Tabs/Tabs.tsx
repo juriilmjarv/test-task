@@ -5,6 +5,7 @@ interface Props {
   active: Tab
   onChange: (tab: Tab) => void
 }
+
 export function Tabs({ active, onChange }: Props) {
   return (
     <nav className={styles.tabs} aria-label="Calculator views">

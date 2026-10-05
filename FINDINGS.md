@@ -108,14 +108,18 @@ responsive width changes, and scrolling.
 ## Verification and scope
 
 - Automated tests cover real money/input/time utilities, reducer transitions,
-  response validation, and component interactions. Component tests alone use
-  jsdom; no network mocking library or mocked API has been added.
+  response validation, component interactions, and complete quote flows. React
+  tests use jsdom. App integration tests use a controlled fetch stub to complete
+  requests in any order, including after cancellation. No mocking library was
+  added, and the real app, hooks, and API validation remain under test.
 - Lint, TypeScript checking, production build, and the complete test suite run
   locally. Browser checks use the actual configured API for entering, converting,
   saving, restoring, navigating, deleting, and clearing history.
-- Deterministic tests for out-of-order network completion, server errors, and
-  expiry timing remain future work because API mocking is deferred. The live
-  integration checks do not exhaust those timing conditions.
+- Deterministic regression tests cover stale successes and failures, recovery
+  from HTTP 429/500 and network failures, blocked saving while a new amount is
+  pending, and returning to a previously quoted amount. In a temporary copy,
+  removing response guards, request-key matching, or refresh revisions made the
+  corresponding tests fail. Expiry timing remains outside automated coverage.
 - History stays in memory as required. Amount changes, currency changes, and
   explicit refresh request quotes immediately, without debounce or an automatic
   retry loop. Pending requests cannot display or save a previous quote.

@@ -95,14 +95,23 @@ npm run dev
 | `npm test` | Run Vitest in watch mode during development |
 | `npm run test:ci` | Run the complete test suite once and exit |
 | `npm run typecheck` | Check app, existing tests, and Vite configuration |
-| `npm run lint` | Check TypeScript and React hooks with ESLint |
-| `npm run format` | Format source and tooling configuration with Prettier |
+| `npm run lint` | Check TypeScript, React hooks, and TS/CSS blank-line spacing |
+| `npm run format` | Apply Prettier, ESLint fixes, and CSS blank-line spacing |
+
+Formatting keeps one blank line between functions, effects, tests, and CSS rules.
+ESLint Stylistic enforces TypeScript/TSX spacing; `scripts/css-spacing.mjs` uses
+PostCSS to check and fix CSS rule spacing, including nested rules. Prettier handles
+the remaining formatting. Run `npm run format` to apply the complete convention;
+`npm run lint` reports missing spacing. Related imports and variable declarations
+remain grouped.
 
 Pure utility, reducer, and API response-validation tests run in Vitest’s default
-Node environment. Colocated React component tests use Testing Library and opt
-into jsdom per file. Tests exercise real components and functions; there are no
-API mocks or MSW. The live endpoint is used for manual integration checks, not
-for CI tests.
+Node environment. React component and app integration tests use Testing Library
+and opt into jsdom per file. The app integration tests control fetch responses
+to verify out-of-order completion, HTTP/network failures, refresh recovery, and
+saving only a current quote. Components, hooks, and API validation run unchanged;
+no mocking library or live service is required for CI. The live endpoint is used
+for manual integration checks.
 
 ## Application structure
 

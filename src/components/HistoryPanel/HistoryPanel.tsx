@@ -8,11 +8,14 @@ interface Props {
   selectedId: string | null
   onSelect: (id: string) => void
 }
+
 export function HistoryPanel({ records, selectedId, onSelect }: Props) {
   const selectedRef = useRef<HTMLLIElement>(null)
+
   useEffect(() => {
     selectedRef.current?.scrollIntoView?.({ block: 'nearest' })
   }, [selectedId])
+
   return (
     <section className={styles.panel} aria-label="Saved conversions">
       {records.length ? (
@@ -30,6 +33,7 @@ export function HistoryPanel({ records, selectedId, onSelect }: Props) {
               onKeyDown={(event) => {
                 if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
                   event.preventDefault()
+
                   const next =
                     event.key === 'Home'
                       ? 0
@@ -42,8 +46,10 @@ export function HistoryPanel({ records, selectedId, onSelect }: Props) {
                               index + (event.key === 'ArrowDown' ? 1 : -1),
                             ),
                           )
+
                   onSelect(records[next].id)
                   const option = event.currentTarget.parentElement?.children[next]
+
                   if (option instanceof HTMLElement) option.focus()
                 } else if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault()

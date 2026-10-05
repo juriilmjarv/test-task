@@ -5,6 +5,7 @@
   font-size: var(--font-amount-max);
   font-variant-numeric: tabular-nums;
 }
+
 .measurement {
   position: absolute;
   width: max-content;
@@ -12,6 +13,7 @@
   pointer-events: none;
   white-space: nowrap;
 }
+
 .output {
   display: block;
   width: 100%;
@@ -20,15 +22,18 @@
   scrollbar-width: thin;
   line-height: 1.2;
 }
+
 .output:focus-visible {
   outline-offset: -2px;
 }
+
 .text {
   display: block;
   width: max-content;
   min-width: 100%;
   text-align: right;
 }
+
 .highlighted {
   color: var(--color-accent);
 }

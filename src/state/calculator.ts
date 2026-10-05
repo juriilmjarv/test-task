@@ -14,6 +14,7 @@ export interface CalculatorState {
   catalogError: string | null
   catalogVersion: number
 }
+
 type Action =
   | { type: 'key'; key: KeypadAction }
   | { type: 'tab'; tab: Tab }
@@ -78,6 +79,7 @@ export function calculatorReducer(state: CalculatorState, action: Action): Calcu
       }
     case 'refresh':
       return { ...state, revision: state.revision + 1 }
+
     case 'key': {
       if (state.tab === 'exchange') {
         if (
@@ -87,29 +89,40 @@ export function calculatorReducer(state: CalculatorState, action: Action): Calcu
           action.key === 'load'
         )
           return state
+
         const amount = editAmount(state.amount, action.key)
+
         return amount === state.amount ? state : { ...state, amount, revision: state.revision + 1 }
       }
+
       const index = state.history.findIndex((record) => record.id === state.selectedId)
+
       if (action.key === 'clear') return { ...state, history: [], selectedId: null }
+
       if (index < 0) return state
+
       if (action.key === 'backspace') {
         const history = state.history.filter((record) => record.id !== state.selectedId)
+
         return {
           ...state,
           history,
           selectedId: history[Math.min(index, history.length - 1)]?.id ?? null,
         }
       }
+
       if (action.key === 'up' || action.key === 'down') {
         const next = Math.max(
           0,
           Math.min(state.history.length - 1, index + (action.key === 'up' ? -1 : 1)),
         )
+
         return { ...state, selectedId: state.history[next].id }
       }
+
       if (action.key === 'load') {
         const record = state.history[index]
+
         return {
           ...state,
           tab: 'exchange',
@@ -119,6 +132,7 @@ export function calculatorReducer(state: CalculatorState, action: Action): Calcu
           revision: state.revision + 1,
         }
       }
+
       return state
     }
   }
