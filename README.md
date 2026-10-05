@@ -98,5 +98,36 @@ npm run dev
 | `npm run lint` | Check TypeScript and React hooks with ESLint |
 | `npm run format` | Format source and tooling configuration with Prettier |
 
-The existing unit tests run in Vitest’s default Node environment. Browser and API
-test tooling will be selected when the application tests are implemented.
+Pure utility, reducer, and API response-validation tests run in Vitest’s default
+Node environment. Colocated React component tests use Testing Library and opt
+into jsdom per file. Tests exercise real components and functions; there are no
+API mocks or MSW. The live endpoint is used for manual integration checks, not
+for CI tests.
+
+## Application structure
+
+- `src/components/`: each component has its own TSX, CSS Module, and behavior test.
+- `src/styles/`: shared colors, spacing, radii, and global defaults.
+- `src/state/`: calculator and history transitions in a tested reducer.
+- `src/api/` and `src/hooks/`: response validation, requests, and quote lifecycle.
+- `src/utils/`: tested amount editing, formatting, and relative-time functions.
+
+The screenshot represents two views of one calculator. The layout fits a phone
+viewport and stays centered at a maximum width of 454px on larger screens.
+History is deliberately in memory and resets when the page reloads. Each amount
+or currency change requests a fresh quote immediately. Saving is disabled until
+the current input has a matching quote.
+
+### Manual integration check
+
+1. Start the app with the configured `.env` and wait for currencies to load.
+2. Enter `1000`, switch either currency, and verify the result updates. Save with `m`.
+3. Open History, navigate with the arrow buttons, and load a record with `OK`.
+   Confirm the complete amount and both currencies are restored.
+4. Delete the selected record, then clear all records. Selection controls should
+   disable when the list is empty.
+5. Use refresh for a new quote. When the service returns an error, verify the
+   message and retry; saving is disabled while loading, after an error, or after
+   the quote expires.
+
+See `FINDINGS.md` for the original defects, fixes, and remaining verification limits.
