@@ -93,8 +93,10 @@ npm run dev
 | `npm run build` | Type-check both TypeScript projects and build the app |
 | `npm run preview` | Serve the production build |
 | `npm test` | Run Vitest in watch mode during development |
-| `npm run test:ci` | Run the complete test suite once and exit |
-| `npm run typecheck` | Check app, existing tests, and Vite configuration |
+| `npm run test:unit` | Run unit, component, and app integration tests once |
+| `npm run test:e2e` | Build the app and run live-API browser tests |
+| `npm run test:ci` | Run the existing tests and browser suite once and exit |
+| `npm run typecheck` | Check app, all tests, and Vite/Playwright configuration |
 | `npm run lint` | Check TypeScript, React hooks, and TS/CSS blank-line spacing |
 | `npm run format` | Apply Prettier, ESLint fixes, and CSS blank-line spacing |
 
@@ -111,8 +113,33 @@ and opt into jsdom per file. The app integration tests control fetch responses
 to verify out-of-order completion, HTTP/network failures, refresh recovery, and
 saving only a current quote, expiry boundaries, and currency-catalog retry.
 Components, hooks, and API validation run unchanged; no mocking library or live
-service is required for CI. The live endpoint is used
-for manual integration checks.
+service is required for `test:unit`. The live endpoint is used for browser tests
+and manual integration checks.
+
+### Browser end-to-end tests
+
+Install Chromium once after installing dependencies:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+Playwright builds the production app, starts its preview on port 5199, and runs
+two user journeys in desktop and mobile Chromium contexts. They cover live
+conversion and currency changes, saving, loading a complete history amount,
+keyboard selection, deleting and clearing records, disabled controls, and
+in-memory history resetting after a page reload. They use the actual API with
+the existing `.env` configuration; no requests are intercepted or mocked.
+
+`API_URL` and `CANDIDATE_ID` must be configured in `.env` (or environment
+variables). Browser tests run with one worker and no automatic retries. API
+availability and rate limits can cause a failure; these tests are a live smoke
+check, while `test:unit` is the deterministic suite for development.
+`test:ci` runs both suites and requires Chromium and the API configuration too.
+
+Use `npm run test:e2e -- --headed` to watch the browser. Failed runs save
+screenshots and traces under the ignored `test-results/` directory.
 
 ## Application structure
 
@@ -121,6 +148,7 @@ for manual integration checks.
 - `src/state/`: calculator and history transitions in a tested reducer.
 - `src/api/` and `src/hooks/`: response validation, requests, and quote lifecycle.
 - `src/utils/`: tested amount editing, formatting, and relative-time functions.
+- `e2e/`: Playwright user journeys against the production build and live API.
 
 The screenshot represents two views of one calculator. The layout fits a phone
 viewport and stays centered at a maximum width of 454px on larger screens.

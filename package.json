@@ -7,11 +7,13 @@
     "dev": "vite",
     "start": "npm run dev",
     "build": "tsc -b && vite build",
-    "format": "prettier --write src scripts vite.config.ts eslint.config.js && eslint src scripts vite.config.ts eslint.config.js --fix && node scripts/css-spacing.mjs --write",
-    "lint": "eslint src scripts vite.config.ts eslint.config.js && node scripts/css-spacing.mjs",
+    "format": "prettier --write src e2e scripts vite.config.ts playwright.config.ts eslint.config.js && eslint src e2e scripts vite.config.ts playwright.config.ts eslint.config.js --fix && node scripts/css-spacing.mjs --write",
+    "lint": "eslint src e2e scripts vite.config.ts playwright.config.ts eslint.config.js && node scripts/css-spacing.mjs",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ci": "vitest run",
+    "test": "vitest src",
+    "test:unit": "vitest run src",
+    "test:e2e": "playwright test",
+    "test:ci": "npm run test:unit && npm run test:e2e",
     "typecheck": "tsc -b"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
     "@stylistic/eslint-plugin": "5.10.0",
     "@testing-library/dom": "10.4.2",
     "@testing-library/jest-dom": "6.9.1",

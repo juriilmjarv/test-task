@@ -20,13 +20,20 @@ const separatedStatements = [
 ]
 
 export default defineConfig(
-  globalIgnores(['dist', 'node_modules']),
+  globalIgnores(['dist', 'node_modules', 'playwright-report', 'test-results']),
   eslint.configs.recommended,
   tseslint.configs.recommended,
   reactHooks.configs.flat['recommended-latest'],
   reactRefresh.configs.vite,
   {
-    files: ['src/**/*.{ts,tsx}', 'scripts/**/*.mjs', 'vite.config.ts', 'eslint.config.js'],
+    files: [
+      'src/**/*.{ts,tsx}',
+      'e2e/**/*.ts',
+      'scripts/**/*.mjs',
+      'vite.config.ts',
+      'playwright.config.ts',
+      'eslint.config.js',
+    ],
     plugins: { '@stylistic': stylistic },
     rules: {
       '@stylistic/padding-line-between-statements': [

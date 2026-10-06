@@ -130,6 +130,12 @@ responsive width changes, and scrolling.
 - History stays in memory as required. Amount changes, currency changes, and
   explicit refresh request quotes immediately, without debounce or an automatic
   retry loop. Pending requests cannot display or save a previous quote.
+- Playwright browser tests run the production build with the real API in desktop
+  and mobile Chromium contexts. Both journeys passed in both contexts: convert,
+  save, restore and reload; keyboard history navigation, delete and clear.
+  The suite uses one worker, no API mocks and no automatic retries. Service
+  outages or rate limits can fail this live smoke check. Screenshots and traces
+  are retained on failure, and generated artifacts are ignored by Git.
 
 ## Type safety and status readability
 
