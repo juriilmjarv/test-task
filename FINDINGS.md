@@ -117,9 +117,10 @@ responsive width changes, and scrolling.
   tests use jsdom. App integration tests use a controlled fetch stub to complete
   requests in any order, including after cancellation. No mocking library was
   added, and the real app, hooks, and API validation remain under test.
-- Lint, TypeScript checking, production build, and the complete test suite run
-  locally. Browser checks use the actual configured API for entering, converting,
-  saving, restoring, navigating, deleting, and clearing history.
+- Lint, TypeScript checking, production build, and the complete deterministic
+  test suite run locally. Browser checks cover entering, converting, saving,
+  restoring, navigating, deleting, and clearing history. A separate command
+  exercises those journeys against the actual configured API.
 - Deterministic regression tests cover stale successes and failures, recovery
   from HTTP 429/500 and network failures, blocked saving while a new amount is
   pending, and returning to a previously quoted amount. In a temporary copy,
@@ -130,12 +131,30 @@ responsive width changes, and scrolling.
 - History stays in memory as required. Amount changes, currency changes, and
   explicit refresh request quotes immediately, without debounce or an automatic
   retry loop. Pending requests cannot display or save a previous quote.
-- Playwright browser tests run the production build with the real API in desktop
-  and mobile Chromium contexts. Both journeys passed in both contexts: convert,
-  save, restore and reload; keyboard history navigation, delete and clear.
-  The suite uses one worker, no API mocks and no automatic retries. Service
-  outages or rate limits can fail this live smoke check. Screenshots and traces
-  are retained on failure, and generated artifacts are ignored by Git.
+- Playwright browser tests run the production build in desktop and mobile
+  Chromium contexts, with controlled HTTP responses for the CI suite. The same
+  journeys can use the real API through `test:e2e:live`. Both modes use one worker
+  and no automatic retries. Screenshots and traces are retained on failure,
+  and generated artifacts are ignored by Git.
+
+## CI depended on live API availability
+
+**Symptom:** `test:ci` could fail even when the app behaved correctly. A live
+browser run failed after restoring history because the service returned HTTP 429;
+the app correctly displayed the error and disabled saving.
+
+**Cause:** The mandatory browser suite depended on the remote service's latency,
+availability, and rate limits. Unit and integration tests passed while that
+external dependency made the CI result unpredictable.
+
+**Fix:** Default browser tests supply controlled currency and quote responses
+through Playwright routing, keeping the real production app under test. They
+check exact results for known rates as well as the existing user journeys.
+`test:ci` runs all deterministic suites once. Browser tests need no API
+configuration, and their preview proxy targets an unreachable local address to
+prevent accidental live calls. `test:e2e:live` reuses the journeys without
+interception and with the configured API; it remains an optional integration
+smoke check whose failures can reflect the service's health.
 
 ## Type safety and status readability
 

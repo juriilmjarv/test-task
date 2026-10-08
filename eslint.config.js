@@ -31,7 +31,7 @@ export default defineConfig(
       'e2e/**/*.ts',
       'scripts/**/*.mjs',
       'vite.config.ts',
-      'playwright.config.ts',
+      'playwright*.config.ts',
       'eslint.config.js',
     ],
     plugins: { '@stylistic': stylistic },

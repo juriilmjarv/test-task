@@ -1,6 +1,8 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
-test('converts, saves, restores history and resets it after a page reload', async ({ page }) => {
+test('converts, saves, restores history and resets it after a page reload', async ({
+  page,
+}, testInfo) => {
   await page.goto('/')
   await expect(page.getByLabel('From currency')).toBeEnabled()
 
@@ -13,6 +15,9 @@ test('converts, saves, restores history and resets it after a page reload', asyn
   const result = await page.getByTestId('result').innerText()
 
   expect(result).toMatch(/^\d[\d,]*(?:\.\d{1,2})?$/)
+
+  if (!testInfo.config.metadata.liveApi) expect(result).toBe('1,170')
+
   await page.getByTestId('key-save').click()
   await page.getByTestId('tab-history').click()
   await expect(page.getByTestId('history-count')).toHaveText('8 records')
@@ -26,6 +31,10 @@ test('converts, saves, restores history and resets it after a page reload', asyn
   await expect(page.getByLabel('To currency')).toHaveValue('EUR')
   await expect(page.getByTestId('amount')).toHaveText('1000')
   await expect(page.getByTestId('key-save')).toBeEnabled()
+
+  if (!testInfo.config.metadata.liveApi) {
+    await expect(page.getByTestId('result')).toHaveText('922.25')
+  }
 
   await page.reload()
   await page.getByTestId('tab-history').click()
