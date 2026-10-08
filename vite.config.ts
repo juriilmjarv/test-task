@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
       rewrite: (path) => {
         const [base, query] = path.split('?')
         const userParam = `user=${candidateId}`
+
         return query ? `${base}?${query}&${userParam}` : `${base}?${userParam}`
       },
     },

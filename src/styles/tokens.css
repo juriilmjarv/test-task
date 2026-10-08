@@ -1,0 +1,27 @@
+:root {
+  --color-page: #e6e6e6;
+  --color-surface: #e7e7e7;
+  --color-keypad: #f3eeee;
+  --color-text: #080808;
+  --color-muted: #666;
+  --color-accent: #3e70ff;
+  --color-link: #285ad6;
+  --color-danger: #f54146;
+  --color-error: #ac2428;
+  --color-disabled: #c4c0c0;
+  --color-backspace: #6482df;
+  --color-backspace-disabled: #dfe0f2;
+  --color-hover: #00000006;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --radius-card: 3rem;
+  --radius-keypad: 2.25rem;
+  --radius-control: 0.5rem;
+  --font-amount-max: 36px;
+  --font-amount-min: 18px;
+  --font-small: 0.75rem;
+  --shadow-card: 0 7px 32px #00000040;
+}
