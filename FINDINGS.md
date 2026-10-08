@@ -71,6 +71,14 @@
 - **Cause:** Strict mode alone allowed unchecked array access; status logic used nested conditions.
 - **Fix:** Enable `noUncheckedIndexedAccess`, handle missing entries, and use early returns.
 
+## Same currency on both sides
+
+- **Current behavior:** Both selects allow the same currency, such as USD → USD.
+- **Decision:** Left unchanged because the assignment does not prohibit it and a same-currency
+  conversion is mathematically valid.
+- **Possible improvement:** Selecting the other side's currency could swap the pair, keeping the
+  entered amount and requesting a fresh quote.
+
 ## Remaining limits
 
 - The live service has returned HTTP 429 and 500 during checks. Refresh lets users retry, but
